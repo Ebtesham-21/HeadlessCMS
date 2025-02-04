@@ -6,6 +6,7 @@ import Link from "next/link";
 import { delay } from "@/lib/utils";
 import { Suspense } from "react";
 import { getWixClient } from "@/lib/wix-client.base";
+import Product from "@/components/Product";
 
 export default function Home() {
   return (
@@ -62,5 +63,23 @@ async function FeaturedProducts() {
   }
 
 
-  const FeaturedProducts = await wixClient.products.queryProducts().hasSome("collectionIds", [collection._id] )
+  const featuredProducts = await wixClient.products.queryProducts()
+  .hasSome("collectionIds", [collection._id] )
+  .descending("lastUpdated")
+  .find();
+
+  if(!featuredProducts.items.length) {
+    return null;
+  }
+
+  return <div className="space-y-5">
+    <h2 className="text-2xl font-bold">Featured Products</h2>
+    <div className="flex flex-col  sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {featuredProducts.items.map(product => (
+        <Product key={product._id} product={product} />
+
+      ))}
+    </div>
+  </div>
+
 }

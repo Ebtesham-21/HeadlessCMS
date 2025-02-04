@@ -7,6 +7,7 @@ import { delay } from "@/lib/utils";
 import { Suspense } from "react";
 import { getWixClient } from "@/lib/wix-client.base";
 import Product from "@/components/Product";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Home() {
   return (
@@ -42,7 +43,7 @@ export default function Home() {
       
       </div>
     </div>
-    <Suspense>
+    <Suspense fallback={<LoadingSkeleton/>}>
     <FeaturedProducts/>
     </Suspense>
 
@@ -73,13 +74,27 @@ async function FeaturedProducts() {
   }
 
   return <div className="space-y-5">
-    <h2 className="text-2xl font-bold">Featured Products</h2>
-    <div className="flex flex-col  sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <h2 className="text-2xl font-bold">Our Latest Editions</h2>
+    <div className="flex gap-5 flex-col  sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {featuredProducts.items.map(product => (
         <Product key={product._id} product={product} />
 
       ))}
     </div>
+    <pre>
+      {JSON.stringify(featuredProducts, null, 2)}
+    </pre>
   </div>
 
+}
+
+function LoadingSkeleton () {
+  return( <div className="flex gap-5 grid-cols-2 flex-col sm:grid md:grid">
+    {
+      Array.from ({length: 3}).map((_, i) => (
+        <Skeleton key={i} className="h-[20rem] w-[30rem]"/>
+      ))
+    }
+  </div>
+  );
 }

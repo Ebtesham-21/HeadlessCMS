@@ -3,6 +3,9 @@ import banner from "@/assets/banner.png";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { delay } from "@/lib/utils";
+import { Suspense } from "react";
+import { getWixClient } from "@/lib/wix-client.base";
 
 export default function Home() {
   return (
@@ -33,13 +36,31 @@ export default function Home() {
           alt="99 Books Banner"
           className="h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-secondary via-transparent"/>
+        <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-red-700 to-red-900"/>
 
       
       </div>
     </div>
+    <Suspense>
+    <FeaturedProducts/>
+    </Suspense>
 
 
    </main>
   );
+}
+
+
+async function FeaturedProducts() {
+  await delay(1000);
+
+  const wixClient = getWixClient();
+  const {collection} = await wixClient.collections.getCollectionBySlug("our-latest-additions");
+
+  if(!collection?._id) {
+    return null;
+  }
+
+
+  const FeaturedProducts = await wixClient.products.queryProducts().hasSome("collectionIds", [collection._id] )
 }

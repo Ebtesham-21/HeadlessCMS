@@ -73,7 +73,7 @@ async function FeaturedProducts() {
     return null;
   }
 
-  return <div className="space-y-5">
+  return (<div className="space-y-5">
     <h2 className="text-2xl font-bold">Our Latest Editions</h2>
     <div className="flex gap-5 flex-col  sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {featuredProducts.items.map(product => (
@@ -86,7 +86,7 @@ async function FeaturedProducts() {
     </pre>
   </div>
 
-}
+);}
 
 function LoadingSkeleton () {
   return( <div className="flex gap-5 grid-cols-2 flex-col sm:grid md:grid">
